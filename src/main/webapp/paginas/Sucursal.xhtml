@@ -5,7 +5,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:rs="http://xmlns.jcp.org/jsf/composite/components">                
-    <ui:define name="title">Pelicula</ui:define>
+    <ui:define name="title">Sucursal</ui:define>
     <ui:define name="content">
         <h1 align="center"> Sucursales</h1>
         <h:form id="Datos">
@@ -31,11 +31,12 @@
                     <p:ajax event="rowSelect" listener="#{sucursalBean.onRowSelect}" update=":da Datos" oncomplete="PF('crud').show()"/>
                     <p:ajax event="rowUnselect" listener="#{sucursalBean.onRowDeselect}" update=":da"/>
                 </p:dataTable>
-                <p:commandButton value="Nuevo" oncomplete="PF('crud').show()" update="Datos :da" actionListener="#{sucursalBean.btnNuevoHandler}"/>
+                
             </h:panelGrid>
+            <p:commandButton value="Nuevo" oncomplete="PF('crud').show()" update="Datos :da" actionListener="#{sucursalBean.btnNuevoHandler}"/>
         </h:form>
 
-        <p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD sucursales">
+        <p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD Sucursales" closable="false" draggable="false">
             <h:form id="da">
 
                 <p:panelGrid columns="2">

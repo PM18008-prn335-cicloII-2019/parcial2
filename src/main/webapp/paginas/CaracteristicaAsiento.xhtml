@@ -5,7 +5,7 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:rs="http://xmlns.jcp.org/jsf/composite/components">                
-    <ui:define name="title">Pelicula</ui:define>
+    <ui:define name="title">CaracAsientos</ui:define>
     <ui:define name="content">
         <h1 align="center">Caracteristicas Asientos</h1>
         <h:form id="Datos">
@@ -25,24 +25,25 @@
                 <p:ajax event="rowSelect" listener="#{caracteristicaAsientoBean.onRowSelect}" update=":da Datos" oncomplete="PF('crud').show()"/>
                 <p:ajax event="rowUnselect" listener="#{caracteristicaAsientoBean.onRowDeselect}" update=":da"/>
                 </p:dataTable>
-                <p:commandButton value="Nuevo" oncomplete="PF('crud').show()" update="Datos :da" actionListener="#{caracteristicaAsientoBean.btnNuevoHandler}"/>
+                
             </h:panelGrid>
+            <p:commandButton value="Nuevo" oncomplete="PF('crud').show()" update="Datos :da" actionListener="#{caracteristicaAsientoBean.btnNuevoHandler}"/>
         </h:form>
         
-        <p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD carac.Asientos">
+        <p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD carac.Asientos" closable="false" draggable="false">
         <h:form id="da">
             
                 <p:panelGrid columns="2">
                     <p:outputLabel value="ID" for="txtId"/>
-                    <p:inputNumber id="txtId" value="#{caracteristicaAsientoBean.registro.idCaracteristica}" disabled="false" decimalPlaces="0" required="true"/>
+                    <p:inputNumber id="txtId" value="#{caracteristicaAsientoBean.registro.idCaracteristica}" disabled="false" decimalPlaces="0"/>
                     <p:outputLabel value="Caracteristica" for="txtCaracteristica"/>
-                    <p:inputText id="txtCaracteristica" value="#{caracteristicaAsientoBean.registro.caracteristica}" required="true"/>
+                    <p:inputText id="txtCaracteristica" value="#{caracteristicaAsientoBean.registro.caracteristica}"/>
                     <p:outputLabel value="Direccion" for="txtDescripcion"/>
-                    <p:inputTextarea id="txtDescripcion" value="#{caracteristicaAsientoBean.registro.descripcion}" required="true"/>
+                    <p:inputTextarea id="txtDescripcion" value="#{caracteristicaAsientoBean.registro.descripcion}"/>
                 </p:panelGrid>
             <rs:AbstractButtons backingBean="#{caracteristicaAsientoBean}" idbackingBean="#{caracteristicaAsientoBean.registro.idCaracteristica}"/>
                 
             </h:form>
         </p:dialog>
     </ui:define>
-</ui:composition>
+</ui:composition> 

@@ -38,13 +38,14 @@ public abstract class BackingBean<T> {
 
     public void iniciar() {
         Modelo();
-        estado = "on";
+        
         if (getFacade().findAll() != null) {
             List = getFacade().findAll();
         } else {
             List = Collections.EMPTY_LIST;
         }
         this.modelo.setRowIndex(-1);
+        this.estado="on";
         registro = null;
     }
 
@@ -56,7 +57,7 @@ public abstract class BackingBean<T> {
     public void onRowDeselect(UnselectEvent event) {
         this.modelo.setRowIndex(-1);
     }
-
+   
     public void btnCancelarHandler(ActionEvent ae) {
         System.out.println("Hola");
         iniciar();        
