@@ -11,6 +11,7 @@ import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
+import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.AbstractFacade;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.AsientoFacade;
@@ -29,6 +30,7 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
     private AsientoFacade asientoFacade;
     private Asiento asiento;
     private List<Asiento> AsientoList;
+    String tab;
 
     public Asiento getAsiento() {
         return asiento;
@@ -46,7 +48,13 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
         this.AsientoList = AsientoList;
     }
 
-    
+    public String getTab() {
+        return tab;
+    }
+
+    public void setTab(String tab) {
+        this.tab = tab;
+    }          
     
     
     
@@ -54,6 +62,7 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
     @Override
     public void iniciar(){
         super.iniciar();
+        tab = "deshabilitado";
         iniciarRelaciones();
     }
 
@@ -90,7 +99,7 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
         if (this.registro == null) {
             this.registro = new Asiento();
         }
-        return super.getRegistro();
+        return super.getRegistro();        
     }
 
     @Override
@@ -104,4 +113,10 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
         return asientoFacade;
     }
 
+    @Override
+    public void onRowSelect(SelectEvent event){
+        registro = (Asiento) event.getObject();
+        estado = "NONE";
+        tab = "habilitado";
+    }
 }

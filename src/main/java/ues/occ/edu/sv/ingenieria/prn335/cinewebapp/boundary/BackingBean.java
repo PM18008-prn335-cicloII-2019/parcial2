@@ -11,8 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -58,8 +56,7 @@ public abstract class BackingBean<T> {
         this.modelo.setRowIndex(-1);
     }
    
-    public void btnCancelarHandler(ActionEvent ae) {
-        System.out.println("Hola");
+    public void btnCancelarHandler(ActionEvent ae) {        
         iniciar();        
     }
 
