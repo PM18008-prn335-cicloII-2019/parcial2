@@ -9,17 +9,22 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.faces.application.FacesMessage;
+import java.util.Map;
+import java.util.UUID;
+import java.util.WeakHashMap;
+import javax.annotation.PostConstruct;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
+import javax.faces.convert.Converter;
+import javax.faces.convert.FacesConverter;
 import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
-import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Inject;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.AbstractFacade;
+import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.AsientoFacade;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.AtributoAsientoFacade;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.CaracteristicaAsientoFacade;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.entity.Asiento;
@@ -29,97 +34,62 @@ import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.entity.CaracteristicaAsiento;
 
 /**
  *
- * @author melvin
+ * @author carlos
  */
+@FacesConverter("entidadConverter")
 @Named(value = "atributoAsientoBean")
 @ViewScoped
-public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements Serializable{
+public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements Serializable, Converter {
+
+    private static Map<Object, String> entities = new WeakHashMap<Object, String>();
+
+    /**
+     * Creates a new instance of AtributoAsientoBean
+     */
     public AtributoAsientoBean() {
     }
     @Inject
     private AtributoAsientoFacade atributoAsientoFacade;
-    List<AtributoAsiento> atributoAsientoC;
-    @Inject 
-    AsientoBean asientoFacade;
+    private List<AtributoAsiento> atributoAsientoList;
+    @Inject
+    private AsientoFacade asientoFacade;
     @Inject
     private CaracteristicaAsientoFacade caracteristicaAsientoFacade;
     private List<CaracteristicaAsiento> caracteristicaAsientoList;
-    String formularioTab;
-    List<String> nombreCaracteristica =new ArrayList();
-    Asiento selecionadoAS;
-    protected boolean exito = false;
-    protected String atributoVal;
-    protected int asiento;
-    protected String caracteristicaNome;
-    protected int caracteristica;
-    
+    private String formularioTab;
+    int idAsiento = 0;
+    Asiento asientoSeleccionado;
+
+    @PostConstruct
     @Override
-    public void iniciar(){
-        relaciona();
-        if (atributoAsientoC.size() == caracteristicaAsientoList.size()) {
-            this.exito = true;
-        }else{
-            this.exito = false;
-        }
-        for (int iteracion = 0; iteracion < caracteristicaAsientoList.size(); iteracion++) {
-            nombreCaracteristica.add(caracteristicaAsientoList.get(iteracion).getCaracteristica());
-        }
-        for (int item = 0; item < atributoAsientoC.size(); item++) {
-            if (nombreCaracteristica.contains(atributoAsientoC.get(item).getCaracteristicaAsiento().getCaracteristica())) {
-                nombreCaracteristica.remove(atributoAsientoC.get(item).getCaracteristicaAsiento().getCaracteristica());
-            }
-        }
-        this.acciones = Estado.NADA;
+    public void iniciar() {
+        iniciarRelaciones();
+        formularioTab = "oculto";        
+        super.estado = "NONE";
         registro = null;
     }
-    
-    public void relaciona(){
-    nombreCaracteristica.clear();
-        caracteristicaAsientoList = caracteristicaAsientoFacade.findAll();
-        atributoAsientoC = atributoAsientoFacade.AtributoAsientoIdAs(this.asiento);    
-    }
-    
-    @Override
-    public void onRowSelect(SelectEvent event) {
-        acciones = Estado.OTHER;
-        for (int i = 0; i < caracteristicaAsientoList.size(); i++) {
-            nombreCaracteristica.add(caracteristicaAsientoList.get(i).getCaracteristica());
+
+    public void iniciarRelaciones() {
+        caracteristicaAsientoList = new ArrayList<>();
+        atributoAsientoList = new ArrayList<>();
+        if (caracteristicaAsientoFacade != null && atributoAsientoFacade != null) {
+            caracteristicaAsientoList = caracteristicaAsientoFacade.findAll();
+            atributoAsientoList = atributoAsientoFacade.AtributoAsientoIdAs(idAsiento);
+        } else {
+            caracteristicaAsientoList = Collections.EMPTY_LIST;
+            atributoAsientoList = Collections.EMPTY_LIST;
         }
-        registro = (AtributoAsiento) event.getObject();
-        this.atributoVal = registro.getValor();
-        this.caracteristicaNome = registro.getCaracteristicaAsiento().getCaracteristica();
     }
     
-    
-     public void getAsientoRowS(SelectEvent event) {
-        this.selecionadoAS = (Asiento) event.getObject();
-        this.asiento = selecionadoAS.getIdAsiento();
-        iniciar();
+    public void onAsientoRowSelect(SelectEvent ae){
+        asientoSeleccionado = (Asiento) ae.getObject();
+        this.idAsiento = asientoSeleccionado.getIdAsiento();
+        iniciarRelaciones();
     }
 
-     public void menuCaracteristicaAsiento() {
-        for (int j = 0; j < selecionadoAS.getAtributoAsientoList().size(); j++) {
-            for (int i = 0; i < caracteristicaAsientoList.size(); i++) {
-                if (selecionadoAS.getAtributoAsientoList().get(j).getCaracteristicaAsiento().getIdCaracteristica() != caracteristicaAsientoList.get(i).getIdCaracteristica()) {
-                    System.out.println(caracteristicaAsientoList.get(i).getCaracteristica());
-                    nombreCaracteristica.add(caracteristicaAsientoList.get(i).getCaracteristica());
-                }
-            }
-        }
-    }
-     
-     @Override
-    public void btnEditarHandler(ActionEvent ae) {
-        registro.setValor(this.atributoVal);
-        atributoAsientoFacade.edit(registro);
-        limpiar();
-        this.iniciar();
-    }
-     
-     
     @Override
     public Object clavePorDatos(AtributoAsiento object) {
-        if(object != null){
+        if (object != null) {
             return object.getAtributoAsientoPK();
         }
         return null;
@@ -128,16 +98,11 @@ public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements
     @Override
     public AtributoAsiento datosPorClave(String rowKey) {
         if (rowKey != null && !rowKey.isEmpty()) {
-            try {
-                Integer buscar = new Integer(rowKey);
-                for (AtributoAsiento at : this.List) {
-                    if (Integer.valueOf(at.getAtributoAsientoPK().getIdAsiento()).compareTo(buscar) == 0) {
-                        return at;
-                    }
+            String buscar = rowKey;
+            for (AtributoAsiento a : this.List) {
+                if (a.getAtributoAsientoPK().toString().equals(buscar)) {
+                    return a;
                 }
-            } catch (NumberFormatException e) {
-
-                Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
             }
         }
         return null;
@@ -147,59 +112,67 @@ public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements
     protected AbstractFacade<AtributoAsiento> getFacade() {
         return atributoAsientoFacade;
     }
+
+    @Override
+    public AtributoAsiento getRegistro() {
+        if (registro == null) {
+            registro = new AtributoAsiento();
+        }
+        return super.getRegistro();
+    }
+
+    @Override
+    public LazyDataModel<AtributoAsiento> getModelo() {
+        return super.getModelo();
+    }
+
+    @Override
+    public void onRowSelect(SelectEvent event) {
+        registro = (AtributoAsiento) event.getObject();
+        formularioTab = "activo";
+    }
     
     @Override
-    public void btnCancelarHandler(ActionEvent ae) {
-        registro = null;
-        limpiar();
+    public void btnCancelarHandler (ActionEvent ae){
+        iniciar();
+    }
+    
+    @Override
+    public void btnEditarHandler(ActionEvent ae){
+        atributoAsientoFacade.edit(registro);
+        iniciar();
+    }
+    
+    @Override
+    public void btnEliminarHandler(ActionEvent ae){
+        atributoAsientoFacade.remove(registro);
+        iniciar();
+    }
+    
+    @Override
+    public void btnAgregarHandler(ActionEvent ae){
+        registro.setAsiento(asientoSeleccionado);
+        AtributoAsientoPK atributoAsientoPK = new AtributoAsientoPK(registro.getCaracteristicaAsiento().getIdCaracteristica(), registro.getAsiento().getIdAsiento());
+        registro.setAtributoAsientoPK(atributoAsientoPK);
+        atributoAsientoFacade.create(registro);
         iniciar();
     }
 
     @Override
-    public void btnAgregarHandler(ActionEvent ae) {
-        AtributoAsiento nuevo = new AtributoAsiento();
-        this.caracteristica = caracteristicaAsientoFacade.caracteristicaAsientoNombre(this.caracteristicaNome);
-        AtributoAsientoPK id = new AtributoAsientoPK(caracteristica, asiento);
-        nuevo.setAtributoAsientoPK(id);
-        nuevo.setAsiento(selecionadoAS);
-        nuevo.setCaracteristicaAsiento(caracteristicaAsientoFacade.find(caracteristica));
-        nuevo.setValor(atributoVal);
-        atributoAsientoFacade.create(nuevo);
-        limpiar();
-        this.iniciar();
+    public void btnNuevoHandler(ActionEvent ae) {
+        formularioTab = "activo";
+        System.out.println("idAsiento: "+ idAsiento);
     }
 
-    @Override
-    public void btnEliminarHandler(ActionEvent ae) {
-        try {
-            atributoAsientoFacade.remove(registro);
-            limpiar();
-            iniciar();
-            
-        } catch (Exception e) {
-            Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
-        }
+    public int getIdAsiento() {
+        return idAsiento;
+    }
+
+    public void setIdAsiento(int idAsiento) {
+        this.idAsiento = idAsiento;
     }
     
-    
-    
-    public void limpiar() {
-        this.atributoVal = new String();
-        this.caracteristicaNome = new String();
-    }
-    
-    @Override
-    public AtributoAsiento getRegistro(){
-        if(registro == null){
-            registro = new AtributoAsiento();
-        }        
-        return super.getRegistro();
-    }
-    
-    @Override
-    public LazyDataModel<AtributoAsiento> getModelo(){
-        return super.getModelo();
-    }
+  
 
     public List<CaracteristicaAsiento> getCaracteristicaAsientoList() {
         return caracteristicaAsientoList;
@@ -209,72 +182,6 @@ public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements
         this.caracteristicaAsientoList = caracteristicaAsientoList;
     }
 
-    public List<AtributoAsiento> getAtributoAsientoC() {
-        return atributoAsientoC;
-    }
-
-    public void setAtributoAsientoC(List<AtributoAsiento> atributoAsientoC) {
-        this.atributoAsientoC = atributoAsientoC;
-    }
-
-    public List<String> getNombreCaracteristica() {
-        return nombreCaracteristica;
-    }
-
-    public void setNombreCaracteristica(List<String> nombreCaracteristica) {
-        this.nombreCaracteristica = nombreCaracteristica;
-    }
-
-    public Asiento getSelecionadoAS() {
-        return selecionadoAS;
-    }
-
-    public void setSelecionadoAS(Asiento selecionadoAS) {
-        this.selecionadoAS = selecionadoAS;
-    }
-
-    public boolean isExito() {
-        return exito;
-    }
-
-    public void setExito(boolean exito) {
-        this.exito = exito;
-    }
-
-    public String getAtributoVal() {
-        return atributoVal;
-    }
-
-    public void setAtributoVal(String atributoVal) {
-        this.atributoVal = atributoVal;
-    }
-
-    public int getAsiento() {
-        return asiento;
-    }
-
-    public void setAsiento(int asiento) {
-        this.asiento = asiento;
-    }
-
-    public String getCaracteristicaNome() {
-        return caracteristicaNome;
-    }
-
-    public void setCaracteristicaNome(String caracteristicaNome) {
-        this.caracteristicaNome = caracteristicaNome;
-    }
-
-    public int getCaracteristica() {
-        return caracteristica;
-    }
-
-    public void setCaracteristica(int caracteristica) {
-        this.caracteristica = caracteristica;
-    }
-
-    
-    
     public String getFormularioTab() {
         return formularioTab;
     }
@@ -282,5 +189,49 @@ public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements
     public void setFormularioTab(String formularioTab) {
         this.formularioTab = formularioTab;
     }
+
+    public List<AtributoAsiento> getAtributoAsientoList() {
+        return atributoAsientoList;
+    }
+
+    public void setAtributoAsientoList(List<AtributoAsiento> atributoAsientoList) {
+        this.atributoAsientoList = atributoAsientoList;
+    }
+
+    public Asiento getAsientoSeleccionado() {
+        return asientoSeleccionado;
+    }
+
+    public void setAsientoSeleccionado(Asiento asientoSeleccionado) {
+        this.asientoSeleccionado = asientoSeleccionado;
+    }
     
+    
+    
+    
+
+    @Override
+    public Object getAsObject(FacesContext fc, UIComponent uic, String value) {
+        for (Map.Entry<Object, String> entry : entities.entrySet()) {
+            if (entry.getValue().equals(value)) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String getAsString(FacesContext fc, UIComponent uic, Object object) {
+        synchronized (entities) {
+            if (!entities.containsKey(object)) {
+                String uuid = UUID.randomUUID().toString();
+                entities.put(object, uuid);
+                return uuid;
+            } else {
+                return entities.get(object);
+            }
+        }
+
+    }
+
 }
