@@ -10,50 +10,77 @@
     <ui:define name="content">
         <h1 align="center">Asientos</h1>
         <h:form id="Datos">
-            <h:panelGrid rendered="#{asientoBean.estado!='NONE'}">                
-                <p:dataTable var="a" value="#{asientoBean.modelo}" paginator="true" rows="5" paginatorPosition="bottom" 
-                         selectionMode="single" id="Genero" lazy="true" selection="#{asientoBean.registro}" 
-                         rendered="#{not empty asientoBean.modelo}">>
+            <h:panelGrid rendered="#{asientobean.acciones=='NADA'}">                
+                <p:dataTable var="a" value="#{asientobean.modelo}" paginator="true" rows="5" paginatorPosition="bottom" 
+                             selectionMode="single" id="Genero" lazy="true" selection="#{asientobean.registro}" 
+                         rendered="#{not empty asientobean.modelo}">>
                     <p:column headerText="ID">
                         <h:outputText value="#{a.idAsiento}"/>
                     </p:column>
                     <p:column headerText="Estado">
                         <h:outputText value="#{a.activo?'Activo':'Inactivo'}"/>
                     </p:column>
-                <p:ajax event="rowSelect" listener="#{asientoBean.onRowSelect}" update=":da Datos" oncomplete="PF('crud').show()"/>
-                <p:ajax event="rowUnselect" listener="#{asientoBean.onRowDeselect}" update=":da"/>
+                    <p:ajax event="rowSelect" listener="#{asientobean.onRowSelect}" update="Datos :da :da:tab" />
+                    <p:ajax event="rowSelect" listener="#{atributoAsientoBean.getAsientoRowS}"/>
                 </p:dataTable>
-                
+                <p:commandButton value="Nuevo" update=":da :Datos" actionListener="#{asientobean.btnNuevoHandler}"/> 
             </h:panelGrid>
-            <p:commandButton value="Nuevo" oncomplete="PF('crud').show()" update="Datos :da" actionListener="#{asientoBean.btnNuevoHandler}"/>
+           
         </h:form>
         
-        <p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD Asientos" closable="false" draggable="false">
+        <!--p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD Asientos" closable="false" draggable="false"-->
         <h:form id="da">
-            <p:tabView>
-                <p:tab title="Detalle">
+            <p:tabView rendered="#{asientobean.acciones!='NADA'}" id="tab">
+                <p:tab title="Detalle" id="tab1">
                 <p:panelGrid columns="2">
-                    <p:outputLabel value="ID" for="txtId"/>
-                    <p:inputNumber id="txtId" value="#{asientoBean.registro.idAsiento}" disabled="false" decimalPlaces="0"/>
-                    <p:outputLabel value="Activo" for="chActivo"/>
-                    <p:selectBooleanCheckbox id="chActivo" value="#{asientoBean.registro.activo}"/>
+                    <p:outputLabel value="Id" for="txtId" />
+                    <p:inputNumber id="txtId" value="#{asientobean.registro.idAsiento}" disabled="false" decimalPlaces="0" />
+                    <p:outputLabel value="Activo" for="chActi"/>
+                    <p:selectBooleanCheckbox id="chActi" value="#{asientobean.registro.activo}" />
+                                             
+                    
                 </p:panelGrid>
-                <rs:AbstractButtons backingBean="#{asientoBean}" idbackingBean="#{asientoBean.registro.idAsiento}"/>
-                
+               <rs:AbstractButtons backingBean="#{asientobean}" />
                 </p:tab>
-                <p:tab title="Atributos" disabled="#{asientoBean.tab=='deshabilitado'}">
-                    <p:panelGrid columns="2">
-                    <p:outputLabel value="ID" for="txtId2"/>
-                    <p:inputNumber id="txtId2" value="" disabled="true" decimalPlaces="0"/>
-                    <p:outputLabel value="Activo" for="chActivo2"/>
-                    <p:selectBooleanCheckbox id="chActivo2" value="#{asientoBean.registro.activo}"/>
-                </p:panelGrid>
-                    <rs:AbstractButtons backingBean="#{asientoBean}" idbackingBean="#{asientoBean.registro.idAsiento}"/>
+                <p:tab title="Atributos" id="tab2" disabled="#{asientobean.tab=='deshabilitado'}">
+                    <h:panelGrid id="Datos2">
+                        <h:panelGrid id="sbpnl" rendered="#{atributoAsientoBean.acciones=='NADA'}">
+                            <p:dataTable value="#{atributoAsientoBean.atributoAsientoC}" rendered="#{not empty atributoAsientoBean.atributoAsientoC}"
+                                         var="atr" paginator="true" rows="5" paginatorPosition="bottom" rowKey="#{atr.atributoAsientoPK.idCaracteristica}"
+                                         selectionMode="single" selection="#{atributoAsientoBean.registro}" lazy="true">
+                                <p:column headerText="Id">
+                                    <h:outputText value="#{atr.atributoAsientoPK.idCaracteristica}"/>  
+                                </p:column>
+                                <p:column headerText="Caracteristica">
+                                    <h:outputText value="#{atr.caracteristicaAsiento.caracteristica}"/>
+                                </p:column>
+                                <p:column headerText="Valor">
+                                    <h:outputText value="#{atr.valor}"/>
+                                </p:column>
+                                <p:ajax event="rowSelect" listener="#{atributoAsientoBean.onRowSelect}" update=":da:tab:da2 :da:tab:Datos2"/>
+                            </p:dataTable>
+                            <p:commandButton value="Nuevo" update="da:tab:Datos2 :da:tab:da2" actionListener="#{atributoAsientoBean.btnNuevoHandler}"/>
+                        </h:panelGrid>
+                    </h:panelGrid>
+                    
+                        <h:panelGrid id="da2">
+                        <h:panelGrid columns="2" rendered="#{atributoAsientoBean.acciones!='NADA'}">
+                            <p:outputLabel value="Valor"/>
+                            <p:inputText value="#{atributoAsientoBean.atributoVal}" disabled="#{atributoAsientoBean=='OTHER'}"/>
+                            <p:outputLabel value="Caracteristica: "/>
+                            <p:selectOneMenu id="cbCaract" value="#{atributoAsientoBean.caracteristicaNome}" disabled="#{atributoAsientoBean.acciones!='NUEVO'}">
+                         <f:selectItem itemLabel="Select One" itemValue=""/>
+                         <f:selectItems value="#{atributoAsientoBean.nombreCaracteristica}" var="c" itemLabel="#{c}" />
+                          </p:selectOneMenu>
+                            <rs:AbstractButtons backingBean="#{atributoAsientoBean}"/>
+                        </h:panelGrid>
+                        </h:panelGrid>
+                   
                 </p:tab>
             </p:tabView>
                 
                 
             </h:form>
-        </p:dialog>
+        <!--/p:dialog-->
     </ui:define>
-</ui:composition> 
+</ui:composition>

@@ -27,37 +27,41 @@ public abstract class BackingBean<T> {
      public abstract Object clavePorDatos(T object);
 
     public abstract T datosPorClave(String rowKey);
-    protected String estado;
+    
 
     protected abstract AbstractFacade<T> getFacade();
     List<T> List = new ArrayList<>();
     protected T registro;
     protected LazyDataModel<T> modelo;
+    protected Estado acciones;
 
     public void iniciar() {
         Modelo();
-        
+        acciones = Estado.NADA;
         if (getFacade().findAll() != null) {
             List = getFacade().findAll();
         } else {
             List = Collections.EMPTY_LIST;
         }
         this.modelo.setRowIndex(-1);
-        this.estado="on";
+        
         registro = null;
     }
 
     public void onRowSelect(SelectEvent event) {
         registro = (T) event.getObject();
-        estado = "NONE";
+        this.acciones = Estado.OTHER;
+      
     }
 
     public void onRowDeselect(UnselectEvent event) {
         this.modelo.setRowIndex(-1);
+        this.acciones = Estado.NUEVO;
     }
    
     public void btnCancelarHandler(ActionEvent ae) {        
         iniciar();        
+        this.acciones = Estado.NADA;
     }
 
     public void btnAgregarHandler(ActionEvent ae) {
@@ -75,7 +79,7 @@ public abstract class BackingBean<T> {
     }
     
     public void btnNuevoHandler(ActionEvent ae){
-        estado = "NONE";
+        this.acciones = Estado.NUEVO;
     }
     
 
@@ -144,12 +148,12 @@ public abstract class BackingBean<T> {
         return List;
     }
 
-    public String getEstado() {
-        return estado;
+    public Estado getAcciones() {
+        return acciones;
     }
 
-    public void setEstado(String estado) {
-        this.estado = estado;
+    public void setAcciones(Estado acciones) {
+        this.acciones = acciones;
     }
     
     

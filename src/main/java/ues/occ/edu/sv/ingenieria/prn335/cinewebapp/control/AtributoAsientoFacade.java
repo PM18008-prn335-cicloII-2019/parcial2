@@ -5,9 +5,11 @@
  */
 package ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.entity.AtributoAsiento;
 
 /**
@@ -29,4 +31,11 @@ public class AtributoAsientoFacade extends AbstractFacade<AtributoAsiento> {
         super(AtributoAsiento.class);
     }
     
+    public List<AtributoAsiento> AtributoAsientoIdAs(int entero) {
+        Query q = em.createNamedQuery("AtributoAsiento.findByIdAsiento");
+        q.setParameter("idAsiento", entero);
+        return q.getResultList();
+    }
+    
 }
+

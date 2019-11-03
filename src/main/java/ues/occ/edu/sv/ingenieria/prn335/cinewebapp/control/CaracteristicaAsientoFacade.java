@@ -8,6 +8,7 @@ package ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.entity.CaracteristicaAsiento;
 
 /**
@@ -27,6 +28,12 @@ public class CaracteristicaAsientoFacade extends AbstractFacade<CaracteristicaAs
 
     public CaracteristicaAsientoFacade() {
         super(CaracteristicaAsiento.class);
+    }
+    
+    public Integer caracteristicaAsientoNombre(String nome){
+        Query query = em.createNamedQuery("CaracteristicaAsiento.findIdByNombre");
+        query.setParameter("nombre", nome);
+        return Integer.valueOf(query.getSingleResult().toString());
     }
     
 }

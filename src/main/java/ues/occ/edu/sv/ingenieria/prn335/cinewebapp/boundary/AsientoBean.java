@@ -6,6 +6,7 @@
 package ues.occ.edu.sv.ingenieria.prn335.cinewebapp.boundary;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.view.ViewScoped;
@@ -15,38 +16,26 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.LazyDataModel;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.AbstractFacade;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.AsientoFacade;
+import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.control.CaracteristicaAsientoFacade;
 import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.entity.Asiento;
+import ues.occ.edu.sv.ingenieria.prn335.cinewebapp.entity.CaracteristicaAsiento;
 
 
 /**
  *
  * @author Vladimir
  */
-@Named(value = "asientoBean")
+@Named(value = "asientobean")
 @ViewScoped
 public class AsientoBean extends BackingBean<Asiento> implements Serializable{
 
     @Inject
-    private AsientoFacade asientoFacade;
-    private Asiento asiento;
-    private List<Asiento> AsientoList;
+    private AsientoFacade facadeAsiento;
+    
+    @Inject
+    private CaracteristicaAsientoFacade caracteristicaAsientofacade;
+    private List<CaracteristicaAsiento> caracteristicaAsientoList;
     String tab;
-
-    public Asiento getAsiento() {
-        return asiento;
-    }
-
-    public void setAsiento(Asiento asiento) {
-        this.asiento = asiento;
-    }
-
-    public List<Asiento> getAsientoList() {
-        return AsientoList;
-    }
-
-    public void setAsientoList(List<Asiento> AsientoList) {
-        this.AsientoList = AsientoList;
-    }
 
     public String getTab() {
         return tab;
@@ -54,7 +43,7 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
 
     public void setTab(String tab) {
         this.tab = tab;
-    }          
+    }
     
     
     
@@ -63,16 +52,18 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
     public void iniciar(){
         super.iniciar();
         tab = "deshabilitado";
-        iniciarRelaciones();
+        relaciones();
     }
-
-    public void iniciarRelaciones(){
-        if (asientoFacade != null) {
-            AsientoList = asientoFacade.findAll();
+    
+    public void relaciones(){
+        if (caracteristicaAsientofacade != null) {
+            caracteristicaAsientoList = caracteristicaAsientofacade.findAll();
+        }else{
+            caracteristicaAsientoList = Collections.EMPTY_LIST;
         }
     }
-
-
+    
+    
     @Override
     public Object clavePorDatos(Asiento objecto) {
         if (objecto != null) {
@@ -99,24 +90,31 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
         if (this.registro == null) {
             this.registro = new Asiento();
         }
-        return super.getRegistro();        
+        return super.getRegistro();
     }
-
+    
     @Override
     public LazyDataModel<Asiento> getModelo(){
         return super.getModelo();
     }
 
-
+    public List<CaracteristicaAsiento> getCaracteristicaAsientoList() {
+        return caracteristicaAsientoList;
+    }
+    
+    
+    
+    
     @Override
     protected AbstractFacade<Asiento> getFacade() {
-        return asientoFacade;
+        return facadeAsiento;
     }
-
+    
     @Override
     public void onRowSelect(SelectEvent event){
-        registro = (Asiento) event.getObject();
-        estado = "NONE";
-        tab = "habilitado";
+         tab = "habilitado";
+        super.onRowSelect(event);
+        
+       
     }
 }
