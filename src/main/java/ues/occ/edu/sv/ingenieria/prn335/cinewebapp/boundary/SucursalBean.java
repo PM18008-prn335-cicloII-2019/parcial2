@@ -112,6 +112,15 @@ public class SucursalBean extends BackingBean<Sucursal> implements Serializable 
         return super.getRegistro(); //To change body of generated methods, choose Tools | Templates.
     }
    
+    @Override
+    public void btnAgregarHandler(ActionEvent ae){
+        if(registro != null){
+            registro.setIdSucursal(sucursalFacade.getNextId());
+            sucursalFacade.create(registro); 
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro guardado éxito"));
+            iniciar();
+        }
+    }
     
 }
 

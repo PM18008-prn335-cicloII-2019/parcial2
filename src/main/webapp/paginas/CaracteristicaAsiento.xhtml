@@ -40,7 +40,7 @@
             <h:panelGrid rendered="#{caracteristicaAsientoBean.estado=='NONE'}">
                 <p:panelGrid columns="2">
                     <p:outputLabel value="ID" for="txtId"/>
-                    <p:inputNumber id="txtId" value="#{caracteristicaAsientoBean.registro.idCaracteristica}" disabled="false" decimalPlaces="0" />
+                    <p:inputNumber id="txtId" value="#{caracteristicaAsientoBean.registro.idCaracteristica}" disabled="true" decimalPlaces="0" />
                     <p:outputLabel value="Caracteristica" for="txtCaracteristica"/>
                     <p:inputText id="txtCaracteristica" value="#{caracteristicaAsientoBean.registro.caracteristica}"/>
                     <p:outputLabel value="Descripcion" for="txtDescripcion"/>

@@ -8,6 +8,9 @@ package ues.occ.edu.sv.ingenieria.prn335.cinewebapp.boundary;
 import java.io.Serializable;
 import java.util.List;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -118,6 +121,16 @@ public class AsientoBean extends BackingBean<Asiento> implements Serializable{
         registro = (Asiento) event.getObject();
         estado = "NONE";
         tab = "habilitado";
+    }
+    
+    @Override
+    public void btnAgregarHandler(ActionEvent ae){
+        if(registro != null){
+            registro.setIdAsiento(asientoFacade.getNextId());
+            asientoFacade.create(registro);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro guardado con éxito"));
+            iniciar();
+        }
     }
     
 }

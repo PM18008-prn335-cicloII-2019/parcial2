@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ActionEvent;
 import javax.faces.view.ViewScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -111,7 +114,15 @@ public class CaracteristicaAsientoBean extends BackingBean<CaracteristicaAsiento
         return super.getRegistro(); //To change body of generated methods, choose Tools | Templates.
     }
     
-    
+    @Override
+    public void btnAgregarHandler(ActionEvent ae) {
+        if (registro != null) {
+            registro.setIdCaracteristica(caracAsientoFacade.getNextId());
+            caracAsientoFacade.create(registro);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro guardado éxito"));
+            iniciar();
+        }
+    }
     
 }
 

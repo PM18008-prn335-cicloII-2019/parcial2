@@ -47,7 +47,7 @@
             <h:panelGrid rendered="#{sucursalBean.estado=='NONE'}">
                 <p:panelGrid columns="2">
                     <p:outputLabel value="ID" for="txtId"/>
-                    <p:inputNumber id="txtId" value="#{sucursalBean.registro.idSucursal}" disabled="false" decimalPlaces="0"/>
+                    <p:inputNumber id="txtId" value="#{sucursalBean.registro.idSucursal}" disabled="true" decimalPlaces="0"/>
                     <p:outputLabel value="Nombre" for="txtNombre"/>
                     <p:inputText id="txtNombre" value="#{sucursalBean.registro.nombre}" />
                     <p:outputLabel value="Direccion" for="txtDescripcion"/>

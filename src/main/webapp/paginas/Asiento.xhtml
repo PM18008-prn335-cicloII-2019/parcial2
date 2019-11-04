@@ -12,7 +12,7 @@
         <center><h1>Asientos</h1></center>
         <h:form id="Datos">
             <h:panelGrid rendered="#{asientoBean.estado!='NONE'}" id="panelgridTabla">                
-                <p:dataTable var="a" value="#{asientoBean.modelo}" paginator="true" rows="5" paginatorPosition="bottom" 
+                <p:dataTable var="a" value="#{asientoBean.modelo}" paginator="true" rows="10" paginatorPosition="bottom" 
                              selectionMode="single" id="Asiento" lazy="true" selection="#{asientoBean.registro}" 
                              rendered="#{not empty asientoBean.modelo}">>
                     <p:column headerText="ID">
@@ -41,7 +41,7 @@
                     <p:tab title="Detalle" id="tab1">
                         <h:panelGrid columns="2">
                             <p:outputLabel value="ID" for="txtId"/>
-                            <p:inputNumber id="txtId" value="#{asientoBean.registro.idAsiento}" disabled="#{asientoBean.tab!='deshabilitado'}" decimalPlaces="0" />
+                            <p:inputNumber id="txtId" value="#{asientoBean.registro.idAsiento}" disabled="true" decimalPlaces="0" />
                             <p:outputLabel value="Activo" for="chActivo"/>
                             <p:selectBooleanCheckbox id="chActivo" value="#{asientoBean.registro.activo}"/>
                         </h:panelGrid>
