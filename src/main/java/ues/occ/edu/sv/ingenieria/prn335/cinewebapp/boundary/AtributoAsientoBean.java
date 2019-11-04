@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.WeakHashMap;
 import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.convert.Converter;
@@ -140,12 +141,14 @@ public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements
     @Override
     public void btnEditarHandler(ActionEvent ae){
         atributoAsientoFacade.edit(registro);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro editado correctamente"));   
         iniciar();
     }
     
     @Override
     public void btnEliminarHandler(ActionEvent ae){
         atributoAsientoFacade.remove(registro);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro eliminado"));
         iniciar();
     }
     
@@ -155,6 +158,7 @@ public class AtributoAsientoBean extends BackingBean<AtributoAsiento> implements
         AtributoAsientoPK atributoAsientoPK = new AtributoAsientoPK(registro.getCaracteristicaAsiento().getIdCaracteristica(), registro.getAsiento().getIdAsiento());
         registro.setAtributoAsientoPK(atributoAsientoPK);
         atributoAsientoFacade.create(registro);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro guardado correctamente"));
         iniciar();
     }
 

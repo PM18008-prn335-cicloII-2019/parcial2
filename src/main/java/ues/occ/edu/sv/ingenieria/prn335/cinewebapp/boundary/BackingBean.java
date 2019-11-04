@@ -11,6 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ActionEvent;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.event.UnselectEvent;
@@ -63,6 +65,7 @@ public abstract class BackingBean<T> {
     public void btnAgregarHandler(ActionEvent ae) {
         if (registro != null) {            
             getFacade().create(registro);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro guardado éxito"));
             iniciar();            
         }
     }
@@ -70,6 +73,7 @@ public abstract class BackingBean<T> {
     public void btnEditarHandler(ActionEvent ae) {
         if (registro != null) {
             getFacade().edit(registro);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro editado con éxito"));
             iniciar();
         }
     }
@@ -83,6 +87,7 @@ public abstract class BackingBean<T> {
         if (getFacade() != null && registro != null) {
             try {
                 getFacade().remove(registro);
+                FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Correcto", "Registro eliminado"));
                 iniciar();
             } catch (Exception e) {
                 Logger.getLogger(getClass().getName()).log(Level.SEVERE, e.getMessage(), e);
