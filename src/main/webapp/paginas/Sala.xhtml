@@ -7,9 +7,9 @@
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:rs="http://xmlns.jcp.org/jsf/composite/components"
                 xmlns:f="http://xmlns.jcp.org/jsf/core">                
-    <ui:define name="title">Asientos</ui:define>
+    <ui:define name="title">Sala</ui:define>
     <ui:define name="content">
-        <center><h1>Sala</h1></center>
+        <center><h1>Salas</h1></center>
         <h:form id="Datos">
             <h:panelGrid rendered="#{salaBean.estado!='NONE'}" id="panelgridTabla">                
                 <p:dataTable var="a" value="#{salaBean.modelo}" paginator="true" rows="5" paginatorPosition="bottom" 
