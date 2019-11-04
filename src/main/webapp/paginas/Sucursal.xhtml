@@ -11,7 +11,7 @@
         <h:form id="Datos">
             <h:panelGrid id="tabla" rendered="#{sucursalBean.estado!='NONE'}">                
                 <p:dataTable var="s" value="#{sucursalBean.modelo}" paginator="true" rows="5" paginatorPosition="bottom" 
-                             selectionMode="single" id="Genero" lazy="true" selection="#{sucursalBean.registro}" 
+                             selectionMode="single" id="Sucursal" lazy="true" selection="#{sucursalBean.registro}" 
                              rendered="#{not empty sucursalBean.modelo}">>
                     <p:column headerText="ID">
                         <h:outputText value="#{s.idSucursal}"/>
@@ -33,21 +33,22 @@
                 </p:dataTable>
 
             </h:panelGrid>
-            <p:commandButton value="Nuevo" update="Datos :da" actionListener="#{sucursalBean.btnNuevoHandler}"/>
+            <p:commandButton value="Nuevo" update="Datos :da" actionListener="#{sucursalBean.btnNuevoHandler}" rendered="#{sucursalBean.estado!='NONE'}"/>
+            <p:commandButton value="Cancelar" update="Datos :da" actionListener="#{sucursalBean.btnCancelarHandler}" rendered="#{sucursalBean.estado=='NONE'}"/>
         </h:form>
 
-        <!--<p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD Sucursales" closable="false" draggable="false">-->
+
         <h:form id="da">
             <h:panelGrid rendered="#{sucursalBean.estado=='NONE'}">
                 <p:panelGrid columns="2">
                     <p:outputLabel value="ID" for="txtId"/>
-                    <p:inputNumber id="txtId" value="#{sucursalBean.registro.idSucursal}" disabled="false" decimalPlaces="0" required="true"/>
+                    <p:inputNumber id="txtId" value="#{sucursalBean.registro.idSucursal}" disabled="false" decimalPlaces="0"/>
                     <p:outputLabel value="Nombre" for="txtNombre"/>
-                    <p:inputText id="txtNombre" value="#{sucursalBean.registro.nombre}" required="true"/>
+                    <p:inputText id="txtNombre" value="#{sucursalBean.registro.nombre}" />
                     <p:outputLabel value="Direccion" for="txtDescripcion"/>
-                    <p:inputTextarea id="txtDescripcion" value="#{sucursalBean.registro.direccion}" required="true"/>
+                    <p:inputTextarea id="txtDescripcion" value="#{sucursalBean.registro.direccion}"/>
                     <p:outputLabel value="Contacto" for="txtContacto"/>
-                    <p:inputText id="txtContacto" value="#{sucursalBean.registro.contacto}" required="true"/>
+                    <p:inputText id="txtContacto" value="#{sucursalBean.registro.contacto}" />
                     <p:outputLabel value="Activo" for="chActivo"/>
                     <p:selectBooleanCheckbox id="chActivo" value="#{sucursalBean.registro.activo}"/>
                 </p:panelGrid>
@@ -55,6 +56,6 @@
             </h:panelGrid>
 
         </h:form>
-        <!--</p:dialog>-->
+    
     </ui:define>
 </ui:composition>

@@ -18,7 +18,7 @@
             <p:commandButton value="Crear" update="#{cc.attrs.update}" actionListener="#{cc.attrs.backingBean.btnAgregarHandler}"  rendered="#{cc.attrs.idbackingBean == null}"/>
             <p:commandButton value="Editar" update="#{cc.attrs.update}" actionListener="#{cc.attrs.backingBean.btnEditarHandler}" rendered="#{cc.attrs.idbackingBean != null}" />
             <p:commandButton value="Borrar" update="#{cc.attrs.update}" actionListener="#{cc.attrs.backingBean.btnEliminarHandler}" rendered="#{cc.attrs.idbackingBean != null}"/>
-            <p:commandButton value="Cancelar" update="#{cc.attrs.update}" actionListener="#{cc.attrs.backingBean.btnCancelarHandler}"/>
+            
         </h:panelGroup>
     </cc:implementation>
 </html>

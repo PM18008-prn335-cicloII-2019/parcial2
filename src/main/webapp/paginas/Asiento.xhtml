@@ -12,7 +12,7 @@
         <h:form id="Datos">
             <h:panelGrid rendered="#{asientoBean.estado!='NONE'}">                
                 <p:dataTable var="a" value="#{asientoBean.modelo}" paginator="true" rows="5" paginatorPosition="bottom" 
-                             selectionMode="single" id="Genero" lazy="true" selection="#{asientoBean.registro}" 
+                             selectionMode="single" id="Asiento" lazy="true" selection="#{asientoBean.registro}" 
                              rendered="#{not empty asientoBean.modelo}">>
                     <p:column headerText="ID">
                         <h:outputText value="#{a.idAsiento}"/>
@@ -26,17 +26,18 @@
                 </p:dataTable>
 
             </h:panelGrid>
-            <p:commandButton value="Nuevo" update="Datos :da" actionListener="#{asientoBean.btnNuevoHandler}"/>
+            <p:commandButton value="Nuevo" update="Datos :da" actionListener="#{asientoBean.btnNuevoHandler}" rendered="#{asientoBean.estado!='NONE'}"/>
+            <p:commandButton value="Cancelar" update="Datos :da" actionListener="#{asientoBean.btnCancelarHandler}" rendered="#{asientoBean.estado=='NONE'}"/>
         </h:form>
 
-        <!--<p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD Asientos" closable="false" draggable="false">-->
+
             <h:form id="da">
                 <h:panelGrid rendered="#{asientoBean.estado=='NONE'}">
                 <p:tabView id="tab">
                     <p:tab title="Detalle" id="tab1">
                         <h:panelGrid columns="2">
                             <p:outputLabel value="ID" for="txtId"/>
-                            <p:inputNumber id="txtId" value="#{asientoBean.registro.idAsiento}" disabled="false" decimalPlaces="0" required="true"/>
+                            <p:inputNumber id="txtId" value="#{asientoBean.registro.idAsiento}" disabled="#{asientoBean.tab!='deshabilitado'}" decimalPlaces="0" />
                             <p:outputLabel value="Activo" for="chActivo"/>
                             <p:selectBooleanCheckbox id="chActivo" value="#{asientoBean.registro.activo}"/>
                         </h:panelGrid>
@@ -55,8 +56,8 @@
                                 <p:column headerText="Valor">
                                     <h:outputText value="#{atr.valor}"/>
                                 </p:column>
-                                <p:ajax event="rowSelect" listener="#{atributoAsientoBean.onRowSelect}" update=":da:tab"/>
-                                <p:ajax event="rowUnselect" listener="#{atributoAsientoBean.onRowDeselect}" update=":da:tab"/>
+                                <p:ajax event="rowSelect" listener="#{atributoAsientoBean.onRowSelect}" update=":da:tab:tab2"/>
+                                <p:ajax event="rowUnselect" listener="#{atributoAsientoBean.onRowDeselect}" update=":da:tab:tab2"/>
                             </p:dataTable>
                             <p:commandButton value="Nuevo" actionListener="#{atributoAsientoBean.btnNuevoHandler}"  update=":da:tab"/>
                         </h:panelGrid>                        
@@ -71,19 +72,19 @@
                                     <f:selectItems value="#{atributoAsientoBean.caracteristicaAsientoList}" var="a" itemValue="#{a}" itemLabel="#{a.caracteristica}"/>
                                 </p:selectOneMenu>
                                 <p:outputLabel value="Valor"/>
-                                <p:inputText value="#{atributoAsientoBean.registro.valor}" required="false"/>                                
+                                <p:inputText value="#{atributoAsientoBean.registro.valor}"/>                                
                             </h:panelGrid>
                             <h:panelGrid columns="3">                                
                                 <p:commandButton value="Agregar" actionListener="#{atributoAsientoBean.btnAgregarHandler}"  update=":da:tab" rendered="#{atributoAsientoBean.registro.atributoAsientoPK.idCaracteristica==null}"/>
                                 <p:commandButton value="Editar" actionListener="#{atributoAsientoBean.btnEditarHandler}"  update=":da:tab" rendered="#{atributoAsientoBean.registro.atributoAsientoPK.idCaracteristica!=null}"/>
                                 <p:commandButton value="Eliminar" actionListener="#{atributoAsientoBean.btnEliminarHandler}"  update=":da:tab" rendered="#{atributoAsientoBean.registro.atributoAsientoPK.idCaracteristica!=null}"/>                            
-                                <p:commandButton value="Cancelar" actionListener="#{atributoAsientoBean.btnCancelarHandler}"  update=":da:tab"/>
+                               
                             </h:panelGrid>
                         </h:panelGrid>   
                     </p:tab>
                 </p:tabView>
                 </h:panelGrid>
             </h:form>
-        <!--</p:dialog>-->
+   
     </ui:define>
 </ui:composition> 

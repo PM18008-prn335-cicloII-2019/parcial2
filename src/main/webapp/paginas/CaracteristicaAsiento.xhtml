@@ -5,13 +5,13 @@
                 xmlns:h="http://xmlns.jcp.org/jsf/html"
                 xmlns:p="http://primefaces.org/ui"
                 xmlns:rs="http://xmlns.jcp.org/jsf/composite/components">                
-    <ui:define name="title">Carac.Asiento</ui:define>
+    <ui:define name="title">Caracteristica Asiento</ui:define>
     <ui:define name="content">
         <h1 align="center">Caracteristicas de asientos</h1>
         <h:form id="Datos">
             <h:panelGrid rendered="#{caracteristicaAsientoBean.estado!='NONE'}">                
                 <p:dataTable var="ca" value="#{caracteristicaAsientoBean.modelo}" paginator="true" rows="5" paginatorPosition="bottom" 
-                             selectionMode="single" id="Genero" lazy="true" selection="#{caracteristicaAsientoBean.registro}" 
+                             selectionMode="single" id="CaractAsiento" lazy="true" selection="#{caracteristicaAsientoBean.registro}" 
                              rendered="#{not empty caracteristicaAsientoBean.modelo}">>
                     <p:column headerText="ID">
                         <h:outputText value="#{ca.idCaracteristica}"/>
@@ -26,15 +26,16 @@
                     <p:ajax event="rowUnselect" listener="#{caracteristicaAsientoBean.onRowDeselect}" update=":da"/>
                 </p:dataTable>                
             </h:panelGrid>
-            <p:commandButton value="Nuevo" update="Datos :da" actionListener="#{caracteristicaAsientoBean.btnNuevoHandler}"/>
+            <p:commandButton value="Nuevo" update="Datos :da" actionListener="#{caracteristicaAsientoBean.btnNuevoHandler}" rendered="#{caracteristicaAsientoBean.estado!='NONE'}"/>
+            <p:commandButton value="Cancelar" update="Datos :da" actionListener="#{caracteristicaAsientoBean.btnCancelarHandler}" rendered="#{caracteristicaAsientoBean.estado=='NONE'}"/>
         </h:form>
 
-        <!--<p:dialog widgetVar="crud" modal="false" resizable="false" header="CRUD carac.Asientos" closable="false" draggable="false">-->
+       
         <h:form id="da">
             <h:panelGrid rendered="#{caracteristicaAsientoBean.estado=='NONE'}">
                 <p:panelGrid columns="2">
                     <p:outputLabel value="ID" for="txtId"/>
-                    <p:inputNumber id="txtId" value="#{caracteristicaAsientoBean.registro.idCaracteristica}" disabled="false" decimalPlaces="0"/>
+                    <p:inputNumber id="txtId" value="#{caracteristicaAsientoBean.registro.idCaracteristica}" disabled="false" decimalPlaces="0" />
                     <p:outputLabel value="Caracteristica" for="txtCaracteristica"/>
                     <p:inputText id="txtCaracteristica" value="#{caracteristicaAsientoBean.registro.caracteristica}"/>
                     <p:outputLabel value="Descripcion" for="txtDescripcion"/>
@@ -43,6 +44,6 @@
                 <rs:AbstractButtons backingBean="#{caracteristicaAsientoBean}" idbackingBean="#{caracteristicaAsientoBean.registro.idCaracteristica}"/>
             </h:panelGrid>
         </h:form>
-        <!--</p:dialog>-->
+        
     </ui:define>
 </ui:composition> 
